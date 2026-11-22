@@ -1,0 +1,5 @@
+-x
+hip
+--offload-arch=gfx1201
+--rocm-path=/opt/rocm/core-10.2
+-nogpulib
