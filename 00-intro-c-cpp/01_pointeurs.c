@@ -2,7 +2,7 @@
 
 int main(void) {
     int x = 5;
-    int *p = &x;
+    int* p = &x;
     printf("Valeur de x : %d\n", x);
     printf("Adresse de x : %p\n", (void *)&x);
     printf("Valeur de p : %p\n", (void *)p);
