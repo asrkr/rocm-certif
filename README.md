@@ -58,7 +58,7 @@ hipcc --offload-arch=gfx1201 fichier.cpp -o programme
 - [ ] 00 — Intro C/C++
     - [x] Pointeurs, passage par adresse, tableaux
     - [x] malloc / free
-    - [ ] C++ : références, new/delete, std::vector
+    - [x] C++ : références, new/delete, std::vector
     - [ ] Classes et RAII
 - [ ] 01 — Addition de vecteurs
 - [ ] 02 — Matmul naïve
