@@ -79,7 +79,7 @@ hipcc --offload-arch=gfx1201 fichier.cpp -o build/fichier
 
 ## Avancement
 
-- [ ] 00 — Intro C/C++
+- [x] 00 — Intro C/C++
     - [x] Pointeurs, passage par adresse, tableaux
     - [x] malloc / free
     - [x] C++ : références, new/delete, std::vector
