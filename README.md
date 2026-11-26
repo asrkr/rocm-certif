@@ -39,19 +39,43 @@ rocm-certif/
 └── README.md
 ```
 
+Les binaires sont produits dans un sous-dossier `build/` de chaque étape et ne sont pas versionnés.
+
 ## Compilation
 
-Code C/C++ classique (dossier 00) :
+**C (dossier 00)** : warnings, infos de débogage et détection des erreurs mémoire
 
 ```bash
-g++ -std=c++17 -Wall -Wextra fichier.cpp -o programme
+gcc -Wall -Wextra -g -fsanitize=address 00-intro-c-cpp/fichier.c -o 00-intro-c-cpp/build/fichier
 ```
 
-Code HIP :
+**C++ (dossier 00)** :
 
 ```bash
-hipcc --offload-arch=gfx1201 fichier.cpp -o programme
+g++ -std=c++20 -Wall -Wextra -g -fsanitize=address 00-intro-c-cpp/fichier.cpp -o 00-intro-c-cpp/build/fichier
 ```
+
+| Option | Rôle |
+|---|---|
+| `-Wall -Wextra` | Active la plupart des avertissements |
+| `-g` | Informations de débogage (numéros de ligne dans les rapports) |
+| `-fsanitize=address` | AddressSanitizer : détecte fuites, double free, accès hors limites |
+| `-std=c++20` | Version du standard C++ |
+
+**HIP (dossiers 01 et suivants)** :
+
+```bash
+hipcc --offload-arch=gfx1201 fichier.cpp -o build/fichier
+```
+
+> ⚠️ Compiler HIP **hors du venv PyTorch** (`deactivate`) ou appeler `usr/bin/hipcc` : le `hipcc` du venv ne trouve pas les bibliothèques ROCm du device.
+
+## clangd et `compile_flags.txt`
+
+`compile_flags.txt` n'est lu que par **clangd** (analyse dans l'éditeur), jamais par les compilateurs. clangd utilise le fichier le plus proche en remontant les dossiers :
+
+- la racine contient la config HIP (`-x hip`, `--offload-arch=gfx1201`, `--rocm-path=...`, `-nogpulib`) utilisée par défaut,
+- `00-intro-c-cpp/` a son propre fichier (`-Wall -Wextra`), pour que les `.c` soient analysés comme du C et les `.cpp` comme du C++. 
 
 ## Avancement
 
@@ -59,13 +83,26 @@ hipcc --offload-arch=gfx1201 fichier.cpp -o programme
     - [x] Pointeurs, passage par adresse, tableaux
     - [x] malloc / free
     - [x] C++ : références, new/delete, std::vector
-    - [ ] Classes et RAII
+    - [x] Classes et RAII
 - [ ] 01 — Addition de vecteurs
 - [ ] 02 — Matmul naïve
 - [ ] 03 — Matmul avec mémoire partagée
 - [ ] 04 — Timing avec hipEvent
 - [ ] 05 — Profiling rocprofv3
 - [ ] 06 — hipify
+
+### Contenu du dossier 00
+
+| Fichier | Notion |
+|---|---|
+| `01_pointeurs.c` | Adresse (`&`), déréférencement (`*`) |
+| `02_swap.c` | Passage par adresse |
+| `03_tableaux.c` | Tableaux, arithmétique des pointeurs, `sizeof` |
+| `04_malloc.c` | Allocation sur le tas, fuite détectée par ASan |
+| `05_references.cpp` | Références C++ |
+| `06_new_delete.cpp` | `new[]` / `delete[]` |
+| `07_vector.cpp` | `std::vector`, boucles par valeur et par référence |
+| `08_raii.cpp` | Classe RAII, copie interditen (double free) |
 
 ## Ressources
 
